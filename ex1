@@ -1,0 +1,34 @@
+<script type="text/javascript"> 
+$(document).ready(function(){
+	var searchid="#<portlet:namespace/>search_name";
+	$(searchid).keypress(function(){
+		$("#data").remove();
+        console.log($(this).val());
+        var value=$(this).val();
+        
+        $.ajax({
+        	
+			  type:"GET",
+			  url:"<%=fetchusersURL%>?val="+value,
+			  success: function(data){
+				  
+				  var da = $.parseJSON(data);
+				  //console.log(da);
+			     //$("#date").html(data);
+			     console.log("list of items::"+da.length);
+			     for(var i=0;i<da.length;i++){
+			    	 var obj=da[i];
+			    	 //console.log(obj);
+			    	
+			    	 $('#data').append("<option>"+obj.scname+"</option>");
+			    	 
+			     }
+			     
+			     
+			  }
+			});
+        
+        
+    }); 
+});
+</script> 
