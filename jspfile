@@ -1,0 +1,43 @@
+<%@page import="com.liferay.portal.kernel.json.JSONArray"%>
+<%@ include file="/init.jsp"  %>
+<%@page import="java.util.*"%>
+<%@page import="com.tma.user.info.constants.UserInfoPortletKeys"%>
+<portlet:resourceURL id="<%=UserInfoPortletKeys.FETCH_USERS%>" var="fetchusersURL" />
+ <script type="text/javascript"> 
+$(document).ready(function(){
+	
+		$.ajax({
+			  type:"GET",
+			  url:"<%=fetchusersURL%>",
+			  success: function(data){
+				  var da = $.parseJSON(data);
+				  //console.log(da);
+			     //$("#date").html(data);
+			     console.log("list of items::"+da.length)
+			     for(var i=0;i<da.length;i++){
+			    	 var obj=da[i];
+			    	 //console.log(obj);
+			    	 $('#myTable').append("<tr class='child'><td>"+obj.id+"</td><td>"+obj.fname+"</td><td>"+obj.lname+"</td><td>"+obj.fullname+"</td><td>"+obj.scname+"</td><td>"+obj.email+"</td></tr>");
+			    	 
+			     }
+			     
+			     
+			  }
+			});
+});
+</script> 
+ <h1>User&nbsp;Detais&nbsp;Are</h1>
+<span id="date"></span> 
+<table id="myTable" border="all">
+        <thead>
+        <tr>
+        <th>Id</th>
+        <th>FirstName</th>
+        <th>LastName</th>
+        <th>FullName</th>
+        <th>ScreenName</th>
+        <th>Email</th>
+        </tr>
+        </thead>
+    </table>
+<span id="data"></span>

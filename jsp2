@@ -1,0 +1,189 @@
+<%@page import="com.liferay.portal.kernel.json.JSONArray"%>
+<%@ include file="/init.jsp"  %>
+<%@page import="java.util.*"%>
+<%@page import="com.tma.user.info.constants.UserInfoPortletKeys"%>
+<portlet:resourceURL id="<%=UserInfoPortletKeys.FETCH_USERS%>" var="fetchusersURL" />
+<style type="text/css">
+li.selected {
+    background-color: #7fa5e0;
+    color:black;
+}
+
+
+input[type=text] {
+  width: 320px;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: white;
+  background-image: url('resources/download.png');
+  background-position: 280px 10px; 
+  background-repeat: no-repeat;
+  padding: 12px 20px 12px 40px;
+  
+}
+</style>
+ <script type="text/javascript"> 
+ $(document).ready(function(){
+	 $("li").removeClass('selected');
+	 $("#mytable").hide();
+	 $('#pscname').hide();
+	 $("#<portlet:namespace />searchbyname").keyup(function() {
+		  var foo = $(this).val();
+		  console.log(foo);
+		  if(foo==""){
+			  $("#mytable").hide();
+			  $('#pscname').hide();
+			  
+		  }
+		  else{
+		  $("#userlist li").empty();
+		  $("#mytable").hide();
+		  $('#pscname').hide();
+		  $.ajax({
+			  type:"GET",
+			  url:"<%=fetchusersURL%>",
+			  data:{ <portlet:namespace />search: "byname",<portlet:namespace />searchbyname: foo},
+			  success: function(data){
+				  var da = $.parseJSON(data);
+			     $("#userlist li").empty();
+			     var da = $.parseJSON(data);
+			     $("#userlist li").empty();
+			     console.log("list of items::"+da.length)
+			     for(var i=0;i<da.length;i++){
+			    	 var obj=da[i];
+			    	 //console.log(obj);
+			    	  
+			    	 $('#userlist').append("<li value='"+obj.fullname+"'>"+obj.fullname+"</li>");
+			    	 
+			     }
+			     
+			     
+			   }
+			  
+			});
+		  }
+		});
+	 
+	 
+	 
+	 
+	
+	 
+	 
+	  $("#<portlet:namespace />btn12").on('click', function(e){
+		  $("#mytable").hide();
+		  $('#pscname').hide();
+		  $.ajax({
+			  type:"GET",
+			  url:"<%=fetchusersURL%>",
+			  data:{ <portlet:namespace />search: "key"},
+			  success: function(data){
+				  var da = $.parseJSON(data);
+			     $("#userlist li").empty();
+			     console.log("list of items::"+da.length)
+			     for(var i=0;i<da.length;i++){
+			    	 var obj=da[i];
+			    	 //console.log(obj);
+			    	  
+			    	 $('#userlist').append("<li id='"+obj.fullname+"' value='"+obj.fullname+"'>"+obj.fullname+"</li>");
+			    	 
+			     }
+			     
+			   }
+			  
+			});
+	     });
+		  
+		 
+	  
+	  
+	  $("#userlist").on("click","li", function(){
+			     //console.log("list");
+			     //console.log($(this).text());
+			     var str=$(this).text();
+			     
+			     
+			     $("li").removeClass('selected');
+			     $(this).addClass('selected');
+			     
+			     console.log('clicked on'+str);
+			     $("#mytable").show();
+				 $('#pscname').show();
+			     $.ajax({
+					  type:"GET",
+					  url:"<%=fetchusersURL%>",
+					  data:{ <portlet:namespace />search: "individual",<portlet:namespace />searchid: str},
+					  success: function(data){  
+						  var data2 = JSON.parse(data);
+					   //console.log(data); 
+					   //console.log(data2.fullname);
+					      $('#pscname').empty();
+						  $('#scname').empty();
+						  $('#name').empty();
+						  $('#mail').empty();
+						  $('#orga').empty();
+						  $('#sites').empty();
+					   
+					   
+					   
+					   
+						  $('#pscname').append(data2.scname);
+						  $('#scname').append(data2.scname);
+						  $('#name').append(data2.name);
+						  $('#mail').append(data2.email);
+						  $('#orga').append(data2.org);
+						  $('#sites').append(data2.sites);
+						  }
+					 });
+			     
+			     
+			    });
+		  
+	            
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+ });
+ </script> 
+
+ 
+ 
+<div width="50%" height="700px" align="left">
+ <aui:button id="btn12" name="btn1" value="Users" />
+<br>
+
+</div>
+
+<table border="0">
+<tr>
+<td>
+
+  
+  <br>
+<aui:input   id="searchbyname" label="" name="name" type="text" placeholder="search"/>
+<div style="border:none;width:400px;height:400px;overflow:scroll;">
+<ul style="list-style-type:none;" name="username" id="userlist">
+  </ul> 
+</div>
+</td>
+
+<td>
+ <h2 id="pscname" style="color:#0f408e"></h2>
+<table id="mytable" border="0" rules="none" align="center">
+<tr><th >Screen Name</th><td id="scname"></td></tr>
+<tr><th>Name</th><td id="name"></td></tr>
+<tr><th>Email</th><td id="mail"></td></tr>
+<tr><th>Organization</th><td id="orga"></td></tr>	
+<tr><th>Sites</th><td></td id="sites"></tr>
+</table>
+</td>
+</tr>
+</table>
+
+
